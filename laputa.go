@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"compress/gzip"
 	"crypto/sha256"
+	"crypto/subtle"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -14,13 +15,15 @@ import (
 	"github.com/kelseyhightower/envconfig"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	"github.com/syndtr/goleveldb/leveldb"
 )
 
 type Env struct {
-	Mode  string
-	Debug bool
-	Port  int
-	Floor string
+	Mode     string
+	Debug    bool
+	Port     int
+	Floor    string
+	Akatsuki string
 }
 
 type Laputa struct {
@@ -68,7 +71,7 @@ func (laputa *Laputa) RegisterRouting(e *echo.Echo) {
 func (laputa *Laputa) HealthCheck(c echo.Context) error {
 	art, err := laputa.Art()
 	if err != nil {
-		return c.String(http.StatusOK, "Laputa")
+		return c.String(http.StatusOK, "Good")
 	}
 	return c.String(http.StatusOK, art)
 }
@@ -81,23 +84,36 @@ func (laputa *Laputa) Information(c echo.Context) error {
 
 func (laputa *Laputa) Register(c echo.Context) error {
 	c.Logger().Infof("Registration processing...")
-	body := c.Request().Body()
-	decoder := json.NewDecoder(body)
+	header := c.Request().Header
+	if subtle.ConstantTimeCompare([]byte(header.Get("X-Device")), []byte(laputa.DeviceInfoHash())) != 1 {
+		return c.JSON(http.StatusBadRequest, Response{Status: "Bad request"})
+	}
+	decoder := json.NewDecoder(c.Request().Body)
 	decoder.Decode(laputa)
 
-	secret := laputa.Secret
-	// TODO
-
-	return c.JSON(http.StatusOK, Response{Status: "OK"})
+	return laputa.Store(c)
 }
 
-func (l *Laputa) DeviceInfoHash() string {
-	v := fmt.Sprintf("edy_device_%s", l.env.Floor)
+func (laputa *Laputa) Store(c echo.Context) error {
+	db, err := leveldb.OpenFile("secret", nil)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, Response{Status: err.Error()})
+	}
+	defer db.Close()
+	if err := db.Put([]byte("secret"), []byte(laputa.Secret), nil); err != nil {
+		return c.JSON(http.StatusInternalServerError, Response{Status: err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, Response{})
+}
+
+func (laputa *Laputa) DeviceInfoHash() string {
+	v := fmt.Sprintf("edy_device_%s", laputa.env.Floor)
 	return fmt.Sprintf("%x", sha256.Sum256([]byte(v)))
 }
 
-func (l *Laputa) Port() string {
-	return fmt.Sprintf(":%d", l.env.Port)
+func (laputa *Laputa) Port() string {
+	return fmt.Sprintf(":%d", laputa.env.Port)
 }
 
 func (laputa *Laputa) Art() (string, error) {
