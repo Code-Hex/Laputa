@@ -94,8 +94,9 @@ func (kicker *Kicker) UnixSocket() error {
 
 	go listenSignal(sigchan, sigquit)
 	go kicker.listenSocket(conn, sigquit)
-	<-sigquit
+	<-sigquit // wait for goroutines
 
+	close(sigquit)
 	close(sigchan)
 
 	return nil
@@ -114,19 +115,18 @@ func (kicker *Kicker) listenSocket(conn net.Conn, quit chan bool) {
 			if err != nil {
 				if err == io.EOF {
 					quit <- true
-					close(quit)
 					return
 				}
 				kicker.logger.Error(err.Error())
 			}
 			buf = buf[:nr]
-			kicker.logger.Info(fmt.Sprintf("receive: %s\n", string(buf)))
+			kicker.logger.Info(fmt.Sprintf("receive: %s", string(buf)))
 			conn.Write([]byte("Success"))
 		}
 	}
 }
 
-func listenSignal(sigchan <-chan os.Signal, quit chan<- bool) {
+func listenSignal(sigchan <-chan os.Signal, quit chan bool) {
 	for {
 		select {
 		case <-quit:
@@ -141,7 +141,6 @@ func listenSignal(sigchan <-chan os.Signal, quit chan<- bool) {
 				fallthrough
 			case syscall.SIGQUIT:
 				quit <- true
-				close(quit)
 			}
 		}
 	}
