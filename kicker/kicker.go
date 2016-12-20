@@ -39,7 +39,7 @@ func New(Out zap.WriteSyncer) *Kicker {
 
 func (kicker *Kicker) IsRegisteredEdy(number int) bool {
 	kicker.logger.Info(fmt.Sprintf("Checking edy number: %d", number))
-	req, err := http.NewRequest("GET", "http://127.0.0.1:3000/", nil)
+	req, err := http.NewRequest("GET", os.Getenv("LAPUTA_TARGET"), nil)
 	if err != nil {
 		kicker.logger.Error(err.Error())
 		return false
@@ -71,19 +71,8 @@ func (kicker *Kicker) IsRegisteredEdy(number int) bool {
 }
 
 func (kicker *Kicker) UnixSocket() error {
-	file := "/tmp/laputa.sock"
-	defer os.Remove(file)
-	listener, err := net.Listen("unix", file)
-	if err != nil {
-		return err
-	}
-	conn, err := listener.Accept()
-	if err != nil {
-		return err
-	}
 
-	sigchan := make(chan os.Signal)
-	sigquit := make(chan bool)
+	sigchan := make(chan os.Signal, 1)
 
 	signal.Notify(sigchan,
 		syscall.SIGHUP,
@@ -92,56 +81,66 @@ func (kicker *Kicker) UnixSocket() error {
 		syscall.SIGQUIT,
 	)
 
-	go listenSignal(sigchan, sigquit)
-	go kicker.listenSocket(conn, sigquit)
-	<-sigquit // wait for goroutines
+	file := "/tmp/laputa.sock"
+	defer os.Remove(file)
+	ln, err := net.Listen("unix", file)
+	if err != nil {
+		return err
+	}
 
-	close(sigquit)
+	go kicker.listenSignal(ln, sigchan)
+
+	for {
+		conn, err := ln.Accept()
+		if err != nil {
+			return err
+		}
+		kicker.logger.Info("unix socket is listning...")
+		go kicker.listenSocket(conn)
+	}
+
 	close(sigchan)
 
 	return nil
 }
 
-func (kicker *Kicker) listenSocket(conn net.Conn, quit chan bool) {
-	defer conn.Close()
+func (kicker *Kicker) listenSocket(conn net.Conn) {
 	for {
-		select {
-		case <-quit:
-			kicker.logger.Info("killed with signal")
-			return
-		default:
-			buf := make([]byte, 16)
-			nr, err := conn.Read(buf)
-			if err != nil {
-				if err == io.EOF {
-					quit <- true
-					return
-				}
-				kicker.logger.Error(err.Error())
+		// create buffer for felica id(max digit is 16)
+		buf := make([]byte, 16)
+		nr, err := conn.Read(buf)
+		if err != nil {
+			if err == io.EOF {
+				kicker.logger.Info("shutdown unix socket...")
+				return
 			}
-			buf = buf[:nr]
-			kicker.logger.Info(fmt.Sprintf("receive: %s", string(buf)))
-			conn.Write([]byte("Success"))
+			kicker.logger.Error(err.Error())
 		}
+		buf = buf[:nr]
+		kicker.logger.Info(fmt.Sprintf("receive: %s", string(buf)))
+
+		conn.Write([]byte("Success"))
 	}
 }
 
-func listenSignal(sigchan <-chan os.Signal, quit chan bool) {
+func (kicker *Kicker) listenSignal(conn net.Listener, sigchan <-chan os.Signal) {
 	for {
-		select {
-		case <-quit:
+		sig := <-sigchan
+		switch sig {
+		case syscall.SIGHUP:
+			fallthrough
+		case syscall.SIGINT:
+			fallthrough
+		case Tsyscall.SIGQUIT:
+			fallthrough
+		case syscall.SIGABR:
+			fallthrough
+		case syscall.SIGKILL:
+			fallthrough
+		case syscall.SIGTERM:
+			kicker.logger.Info(fmt.Sprintf("Caught signal %s: shutting down.", sig))
+			conn.Close()
 			return
-		default:
-			switch <-sigchan {
-			case syscall.SIGHUP:
-				fallthrough
-			case syscall.SIGINT:
-				fallthrough
-			case syscall.SIGTERM:
-				fallthrough
-			case syscall.SIGQUIT:
-				quit <- true
-			}
 		}
 	}
 }
