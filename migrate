@@ -1,5 +1,8 @@
 #!/usr/bin/env sh
 
+curl -L https://cpanmin.us | perl - --sudo App::cpanminus
+sudo cpanm Proclet::Declare
+
 mkdir -p ./ssl
 cd ./ssl
 openssl genrsa -out laputa.key 2048
