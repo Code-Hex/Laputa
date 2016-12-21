@@ -1,0 +1,2 @@
+nfcpy==0.11.1
+pifacedigitalio==3.1.0

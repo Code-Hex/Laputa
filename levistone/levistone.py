@@ -1,8 +1,10 @@
+#!/usr/bin/env python
+
 import nfc
 import nfc.clf
 import nfc.ndef
 import binascii
-from pprint import pprint
+
 import sys
 import socket
 import pifacedigitalio

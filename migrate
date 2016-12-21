@@ -1,8 +1,13 @@
 #!/usr/bin/env sh
 
+# migrate for Perl
 curl -L https://cpanmin.us | perl - --sudo App::cpanminus
 sudo cpanm Proclet::Declare
 
+# migrate for python
+sudo pip install -r requirements.txt
+
+# migrate for ssl
 mkdir -p ./ssl
 cd ./ssl
 openssl genrsa -out laputa.key 2048
