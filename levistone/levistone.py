@@ -50,12 +50,15 @@ class Reader:
 	def socket_connect(self):
 		self.socket.connect(self.socket_path)
         
-	def send(self, msg):
+	def balus(self, msg):
 		log.info("send to server: %s" % msg)
 		self.socket.send(msg.encode())
 
-	def recv(self, buf):
-		return self.socket.recv(buf)
+		# True: "I can't see!! I can't see!!!!"
+		# False: "Get down on your knee. Beg your life."
+		data = self.socket.recv(40)
+		if data == "I can't see!! I can't see!!!!":
+			self.open()
 
 	def card_connected(self, tag):
 		if tag.type != "Type3Tag":
@@ -88,23 +91,17 @@ class Reader:
 				if key == "suica":
 					print("suica balance: (little endian)%s" % binascii.hexlify(data[10:12]))
 				elif key == "univ":
-					self.send(binascii.hexlify(data[0:6]))
+					self.balus(binascii.hexlify(data[0:6]))
 				elif key == "edy":
-					self.send(binascii.hexlify(data[2:10]))
+					self.balus(binascii.hexlify(data[2:10]))
 				elif key == "waon":
-					# self.send(binascii.hexlify(data[2:10]))
+					# self.balus(binascii.hexlify(data[2:10]))
 					print("waon balance: %s" % binascii.hexlify(data[0:24]))
 				elif key == "nanaco":
-					self.send(binascii.hexlify(data[0:8]))
+					self.balus(binascii.hexlify(data[0:8]))
 				else: 
 					log.error("error: tag isn't Type3Tag")
 				break
-
-		# True: "I can't see!! I can't see!!!!"
-		# False: "Get down on your knee. Beg your life."
-		data = reader.recv(40)
-		if data == "I can't see!! I can't see!!!!":
-			reader.open()
 
 		return True
 
