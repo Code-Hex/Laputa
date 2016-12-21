@@ -27,7 +27,7 @@ if ! hash go 2>/dev/null; then
 	arch=`uname -m`
     curl -O "https://storage.googleapis.com/golang/go1.7.4.${os}-${arch}.tar.gz"
     tar xzvf "go1.7.4.${os}-${arch}.tar.gz"
-    mv go /usr/local/go
+    sudo mv go /usr/local
     rm "go1.7.4.${os}-${arch}.tar.gz"
 fi
 
