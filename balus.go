@@ -44,7 +44,7 @@ func (balus *Balus) Balus(conn net.Conn, id string) {
 
 func (balus *Balus) isRegisteredFelica(id string) bool {
 	balus.logger.Info(fmt.Sprintf("Checking felica id: %s", id))
-	req, err := http.NewRequest("GET", os.Getenv("LAPUTA_TARGET"), nil)
+	req, err := http.NewRequest("GET", os.Getenv("LAPUTA_TARGET")+id, nil)
 	if err != nil {
 		balus.logger.Error(err.Error())
 		return false
@@ -72,7 +72,7 @@ func (balus *Balus) isRegisteredFelica(id string) bool {
 	ldap := new(LDAP)
 	json.NewDecoder(res.Body).Decode(ldap)
 
-	return ldap != nil
+	return ldap.UID != ""
 }
 
 func getDeviceSecret() (string, error) {
