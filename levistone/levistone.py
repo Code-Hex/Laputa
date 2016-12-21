@@ -104,7 +104,7 @@ class Reader:
 		# False: "Get down on your knee. Beg your life."
 		data = reader.recv(40)
 		if data == "I can't see!! I can't see!!!!":
-			reader.open(e)
+			reader.open()
 
 		return True
 
