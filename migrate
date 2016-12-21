@@ -2,7 +2,7 @@
 
 # migrate for Perl
 if ! hash cpanm 2>/dev/null; then
-	curl -L https://cpanmin.us | perl - --sudo App::cpanminus
+    curl -L https://cpanmin.us | perl - --sudo App::cpanminus
 fi
 
 sudo cpanm Proclet::Declare
@@ -12,19 +12,19 @@ sudo pip install -r requirements.txt
 
 # migrate for ssl
 if [ ! -d "./ssl" ]; then
-	mkdir -p ./ssl
-	cd ./ssl
-	openssl genrsa -out laputa.key 2048
-	openssl req -new -key laputa.key -sha256 -out laputa.csr
-	openssl x509 -in laputa.csr -days 36500 -req -signkey laputa.key -sha256 -out laputa.crt
-	cd ..
+    mkdir -p ./ssl
+    cd ./ssl
+    openssl genrsa -out laputa.key 2048
+    openssl req -new -key laputa.key -sha256 -out laputa.csr
+    openssl x509 -in laputa.csr -days 36500 -req -signkey laputa.key -sha256 -out laputa.crt
+    cd ..
 fi
 
 # for laputa
 if ! hash go 2>/dev/null; then
-	echo "install golang..."
-	os=`uname | tr [A-Z] [a-z]`
-	arch=`uname -m`
+    echo "install golang..."
+    os=`uname | tr [A-Z] [a-z]`
+    arch=`uname -m`
     curl -O "https://storage.googleapis.com/golang/go1.7.4.${os}-${arch}.tar.gz"
     tar xzvf "go1.7.4.${os}-${arch}.tar.gz"
     sudo mv go /usr/local
