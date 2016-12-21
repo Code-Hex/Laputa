@@ -22,7 +22,7 @@ fi
 
 # for laputa
 if ! hash go 2>/dev/null; then
-    echo "install golang..."
+    echo 'install golang...'
     os=`uname | tr [A-Z] [a-z]`
     arch=`uname -m`
     curl -O "https://storage.googleapis.com/golang/go1.7.4.${os}-${arch}.tar.gz"
@@ -36,10 +36,12 @@ if ! hash go 2>/dev/null; then
     source ~/.bash_profile
 fi
 
-go get github.com/syndtr/goleveldb/leveldb
-go get github.com/uber-go/zap
-go get github.com/k0kubun/pp
-go get github.com/kelseyhightower/envconfig
-go get github.com/labstack/echo
+echo 'go get some packages...'
+go get -v github.com/syndtr/goleveldb/leveldb
+go get -v github.com/uber-go/zap
+go get -v github.com/k0kubun/pp
+go get -v github.com/kelseyhightower/envconfig
+go get -v github.com/labstack/echo
 
+echo 'bulding laputa...'
 go build -o laputa
