@@ -34,4 +34,10 @@ if ! hash go 2>/dev/null; then
     source ~/.bash_profile
 fi
 
+go get github.com/syndtr/goleveldb/leveldb
+go get github.com/uber-go/zap
+go get github.com/k0kubun/pp
+go get github.com/kelseyhightower/envconfig
+go get github.com/labstack/echo
+
 go build -o laputa
