@@ -7,11 +7,11 @@ color;
 env(
     LAPUTA_CERTFILE => './ssl/laputa.crt',
     LAPUTA_KEYFILE  => './ssl/laputa.key',
-    LAPUTA_AKATSUKI => 'https://127.0.0.1:3000/api/ldap/felica/',
+    LAPUTA_AKATSUKI => 'https://10.0.1.158:3000/api/ldap/felica/',
     LAPUTA_MODE     => 'development',
     LAPUTA_FLOOR    => 'F321',
-    LAPUTA_PORT     => '4000',
-    LM_COLOR  => 1
+    LAPUTA_PORT     => 443,
+    LM_COLOR        => 1
 );
 
 service('Castle in the sky', './laputa');

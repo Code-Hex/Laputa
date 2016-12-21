@@ -49,7 +49,7 @@ class Reader:
         
 	def send(self, msg):
 		log.info("send to server: %s" % msg)
-		#self.socket.send(msg.encode())
+		self.socket.send(msg.encode())
 
 	def recv(self, buf):
 		return self.sokcet.recv(buf)
