@@ -29,6 +29,9 @@ if ! hash go 2>/dev/null; then
     tar xzvf "go1.7.4.${os}-${arch}.tar.gz"
     sudo mv go /usr/local
     rm "go1.7.4.${os}-${arch}.tar.gz"
+    echo 'export GOROOT=/usr/local/go' >> ~/.bash_profile
+    echo 'export PATH=$PATH:$GOROOT/bin' >> ~/.bash_profile
+    source ~/.bash_profile
 fi
 
 go build -o laputa
