@@ -130,7 +130,7 @@ func (laputa *Laputa) Store(c echo.Context) error {
 }
 
 func (laputa *Laputa) GetDeviceHash() string {
-	v := fmt.Sprintf("edy_device_%s", laputa.env.Floor)
+	v := fmt.Sprintf("felica_device_%s", laputa.env.Floor)
 	return fmt.Sprintf("%x", sha256.Sum256([]byte(v)))
 }
 
