@@ -1,19 +1,34 @@
 #!/usr/bin/env sh
 
 # migrate for Perl
-curl -L https://cpanmin.us | perl - --sudo App::cpanminus
+if hash go 2>/dev/null; then
+	curl -L https://cpanmin.us | perl - --sudo App::cpanminus
+fi
+
 sudo cpanm Proclet::Declare
 
 # migrate for python
 sudo pip install -r requirements.txt
 
 # migrate for ssl
-mkdir -p ./ssl
-cd ./ssl
-openssl genrsa -out laputa.key 2048
-openssl req -new -key laputa.key -sha256 -out laputa.csr
-openssl x509 -in laputa.csr -days 36500 -req -signkey laputa.key -sha256 -out laputa.crt
+if [ ! -d "./ssl" ]; then
+	mkdir -p ./ssl
+	cd ./ssl
+	openssl genrsa -out laputa.key 2048
+	openssl req -new -key laputa.key -sha256 -out laputa.csr
+	openssl x509 -in laputa.csr -days 36500 -req -signkey laputa.key -sha256 -out laputa.crt
+	cd ..
+fi
 
 # for laputa
-cd ..
+if hash go 2>/dev/null; then
+	echo "install golag"
+	os=`uname | tr [A-Z] [a-z]`
+	arch=`uname -m`
+    curl -O "https://storage.googleapis.com/golang/go1.7.4.${os}-${arch}.tar.gz"
+    tar xzvf "go1.7.4.${os}-${arch}.tar.gz"
+    mv go /usr/local/go
+    rm "go1.7.4.${os}-${arch}.tar.gz"
+fi
+
 go build -o laputa
