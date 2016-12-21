@@ -19,7 +19,6 @@ import (
 
 type Env struct {
 	Mode     string
-	Debug    bool
 	Port     int
 	Floor    string
 	Akatsuki string
