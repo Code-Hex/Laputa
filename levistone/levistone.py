@@ -52,7 +52,7 @@ class Reader:
 		self.socket.send(msg.encode())
 
 	def recv(self, buf):
-		return self.sokcet.recv(buf)
+		return self.socket.recv(buf)
 
 	def card_connected(self, tag):
 		if tag.type != "Type3Tag":
