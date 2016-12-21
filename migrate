@@ -21,7 +21,7 @@ if [ ! -d "./ssl" ]; then
 fi
 
 # for laputa
-if hash go 2>/dev/null; then
+if ! hash go 2>/dev/null; then
 	echo "install golag"
 	os=`uname | tr [A-Z] [a-z]`
 	arch=`uname -m`
