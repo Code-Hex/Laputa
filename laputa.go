@@ -30,7 +30,7 @@ type Laputa struct {
 	env    Env
 	art    []byte
 	balus  *Balus
-	Secret string
+	Secret string `json:"device_secret"`
 }
 
 type Response struct {
@@ -106,6 +106,7 @@ func (laputa *Laputa) GetInfo(c echo.Context) error {
 func (laputa *Laputa) Register(c echo.Context) error {
 	laputa.Logger().Info("Registration processing...")
 	header := c.Request().Header
+
 	if subtle.ConstantTimeCompare([]byte(header.Get("X-Device")), []byte(laputa.GetDeviceHash())) != 1 {
 		return c.JSON(http.StatusBadRequest, Response{Status: "Bad request"})
 	}

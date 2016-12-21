@@ -57,11 +57,6 @@ func (balus *Balus) isRegisteredFelica(id string) bool {
 		return false
 	}
 
-	if err != nil {
-		balus.logger.Error(err.Error())
-		return false
-	}
-
 	secret, err := getDeviceSecret()
 	if err != nil {
 		balus.logger.Error(err.Error())
