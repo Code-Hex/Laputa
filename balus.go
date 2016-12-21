@@ -44,7 +44,14 @@ func (balus *Balus) Balus(conn net.Conn, id string) {
 
 func (balus *Balus) isRegisteredFelica(id string) bool {
 	balus.logger.Info(fmt.Sprintf("Checking felica id: %s", id))
-	req, err := http.NewRequest("GET", os.Getenv("LAPUTA_TARGET")+id, nil)
+
+	url := os.Getenv("LAPUTA_AKATSUKI")
+	if url == "" {
+		balus.logger.Error("LAPUTA_AKATSUKI env is empty")
+		return false
+	}
+
+	req, err := http.NewRequest("GET", url+id, nil)
 	if err != nil {
 		balus.logger.Error(err.Error())
 		return false
