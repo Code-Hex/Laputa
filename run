@@ -11,10 +11,10 @@ env(
     LAPUTA_MODE     => 'development',
     LAPUTA_FLOOR    => 'F321',
     LAPUTA_PORT     => '4000',
-    LM_COLOR  => 1,
+    LM_COLOR  => 1
 );
 
-service('./laputa');
-service('./levistone/levistone.py');
+service('Castle in the sky', './laputa');
+service('levistone', './levistone/levistone.py');
 
 run;
