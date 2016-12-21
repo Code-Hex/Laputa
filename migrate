@@ -41,6 +41,7 @@ go get -v github.com/syndtr/goleveldb/leveldb
 go get -v github.com/uber-go/zap
 go get -v github.com/k0kubun/pp
 go get -v github.com/kelseyhightower/envconfig
+go get -v github.com/dgrijalva/jwt-go
 go get -v github.com/labstack/echo
 
 echo 'bulding laputa...'
