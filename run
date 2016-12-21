@@ -14,7 +14,7 @@ env(
     LM_COLOR  => 1,
 );
 
-service('Laputa');
+service('./laputa');
 service('./levistone/levistone.py');
 
 run;
