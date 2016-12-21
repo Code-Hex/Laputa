@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 # migrate for Perl
-if hash go 2>/dev/null; then
+if ! hash cpanm 2>/dev/null; then
 	curl -L https://cpanmin.us | perl - --sudo App::cpanminus
 fi
 
