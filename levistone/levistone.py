@@ -41,6 +41,9 @@ class Reader:
 		# piface
 		self.piface = pifacedigitalio.PiFaceDigital()
 
+		# thread
+		self.event = threading.Event()
+
 	def __del__(self):
 		self.socket.close()
 
@@ -97,9 +100,16 @@ class Reader:
 					log.error("error: tag isn't Type3Tag")
 				break
 
+		# True: "I can't see!! I can't see!!!!"
+		# False: "Get down on your knee. Beg your life."
+		data = reader.recv(40)
+		if data == "I can't see!! I can't see!!!!":
+			reader.open(e)
+
 		return True
 
-	def open(self, e):
+	def open(self):
+		e = self.event
 		topen = threading.Thread(name='open', target=self.turn_on, args=(e,))
 		tclose = threading.Thread(name='close', target=self.turn_off, args=(e,))
 
@@ -117,9 +127,9 @@ class Reader:
 		e.clear()
 		
 	def turn_off(self, e):
-	        while not e.isSet():
-	                self.piface.output_pins[1].turn_off()
-	        e.clear()
+		while not e.isSet():
+			self.piface.output_pins[1].turn_off()
+		e.clear()
 
  
 	def run(self):
@@ -134,15 +144,8 @@ class Reader:
 
 
 if __name__ == '__main__':
-	e = threading.Event()
 	reader = Reader('/tmp/laputa.sock')
 	reader.socket_connect()
 	
 	while reader.run():
-		# True: "I can't see!! I can't see!!!!"
-		# False: "Get down on your knee. Beg your life."
-		data = reader.recv(40)
-		if data == "I can't see!! I can't see!!!!":
-			reader.open(e)
-
 		log.info("*** RESTART ***")
