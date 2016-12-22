@@ -12,7 +12,7 @@ import (
 )
 
 /*
- * Balus is a spell where Laputa collapses.
+ * Balus is a spell to collapse Laputa.
  * However, Since it is not possible to merge even if you create a destructive function,
  * here it means to confirm that felica's id is registered.
  */
