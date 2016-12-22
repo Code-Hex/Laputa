@@ -22,9 +22,8 @@ func (balus *Balus) UnixSocket() error {
 		syscall.SIGTERM,
 	)
 
-	file := "/tmp/laputa.sock"
-	defer os.Remove(file)
-	ln, err := net.Listen("unix", file)
+	os.Remove("/tmp/laputa.sock")
+	ln, err := net.Listen("unix", "/tmp/laputa.sock")
 	if err != nil {
 		return err
 	}
