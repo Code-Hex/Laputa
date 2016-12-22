@@ -5,8 +5,9 @@ use FindBin;
 use Proclet::Declare;
 
 my $curdir = $FindBin::Bin;
+my $logdir = "$curdir/log";
 
-mkdir "./log" unless -d "./log";
+mkdir $logdir unless -d $logdir;
 
 color;
 env(
@@ -16,7 +17,7 @@ env(
     LAPUTA_MODE     => 'development',
     LAPUTA_FLOOR    => 'F321',
     LAPUTA_PORT     => 443,
-    LOG_DIR         => "$curdir/log",
+    LOG_DIR         => $logdir,
     LM_COLOR        => 1
 );
 
