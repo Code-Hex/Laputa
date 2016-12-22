@@ -31,33 +31,55 @@ It is a felica reader that exists in the 1st building of the Faculty of Engineer
 
 # Logic
 ```
-                               check
-                             felica id (felica id searcher)
-            +--------------+            +---------------+
-            |              <--------+   |               |     felica data
-            |   Akatsuki   |        |   |   Levistone   <------------------+
-            |              +----+   |   |               |                  |
-            +--------------+    |   |   +---------------+                  |
-               |   ^    |       |   |           |                          |
-               |   |    |       |   |           |                 +----------------+
- initialize    |   |    |       |   |           |                 |                |
- 　　　　 to         |   |    |       |   |           |                 |   nfc reader   |
- authenticate  |   |    |       |   |           |                 |                |
-               |   |    |       |   |           | send felica id  +----------------+
-               |   |    |       |   |           |
-            +--v--------v--+    |   |   +-------v-------+
-            |              |    |   +---+               |
-            |    Laputa    |    |       |     Balus     |
-            |              |    +------->               |
-            +--------------+            +---------------+
-                               recieve
-          (RESTful API Server)         (Unix domain socket)
-                    +                            ^
-                    |                            |
-                    |                            |
-                    |      +-------------+       |
-                    |      |             |       |
-                    +------>   leveldb   +-------+
-              put secret   |             |   get secret
-                           +-------------+
+                              check
+                            felica id (felica id searcher)
+           +--------------+            +---------------+
+           |              <--------+   |               |     felica data
+           |   Akatsuki   |        |   |   Levistone   <------------------+
+           |              +----+   |   |               |                  |
+           +--+---+----+--+    |   |   +-------+-------+                  |
+              |   ^    |       |   |           |                          |
+              |   |    |       |   |           |                 +--------+-------+
+initialize    |   |    |       |   |           |                 |                |
+　　　　  to        |   |    |       |   |           |                 |   nfc reader   |
+authenticate  |   |    |       |   |           |                 |                |
+              |   |    |       |   |           | send felica id  +----------------+
+              |   |    |       |   |           |
+           +--v---+----v--+    |   |   +-------v-------+
+           |              |    |   +---+               |
+           |    Laputa    |    |       |     Balus     +-------------------------->
+           |              |    +------->               |
+           +--------------+            +---------------+      open the door
+                              recieve
+         (RESTful API Server)         (Unix domain socket)
+                   +                            ^
+                   |                            |
+                   |                            |
+                   |      +-------------+       |
+                   |      |             |       |
+                   +------>   leveldb   +-------+
+             put secret   |             |   get secret
+                          +-------------+
 ```
+
+# Setup
+After `git clone` this project
+
+    ./migrate
+
+# Run
+After setup, you can run
+
+    sudo ./run
+
+# Configuration
+Please open `run` with your favorite editor.  
+By editing the env function, you can change the behavior at program execution.  
+  
+Environment variable
+- `LAPUTA_CERTFILE` Specify the file path of the certificate
+- `LAPUTA_KEYFILE` Specify the file path of the key
+- `LAPUTA_AKATSUKI` Specify the URL of the api for authentication
+- `LAPUTA_MODE` Running mode `development` or `staging`
+- `LAPUTA_FLOOR` Floor code for registration
+- `LAPUTA_PORT` Port number. Specify as much as possible to `443`
