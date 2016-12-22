@@ -17,14 +17,14 @@ func (laputa *Laputa) Art() (string, error) {
 
 	var buf bytes.Buffer
 	_, err = io.Copy(&buf, gz)
-	clErr := gz.Close()
+	gzErr := gz.Close()
 
 	if err != nil {
 		return "", fmt.Errorf("Faild to read laputa bytes: %s", err.Error())
 	}
 
-	if clErr != nil {
-		return "", fmt.Errorf("Faild to read laputa bytes: %s", clErr.Error())
+	if gzErr != nil {
+		return "", fmt.Errorf("Faild to read laputa bytes: %s", gzErr.Error())
 	}
 
 	return buf.String(), nil

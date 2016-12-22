@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"net"
 	"net/http"
 	"os"
@@ -43,7 +42,7 @@ func (balus *Balus) Balus(conn net.Conn, id string) {
 }
 
 func (balus *Balus) isRegisteredFelica(id string) bool {
-	balus.logger.Info(fmt.Sprintf("Checking felica id: %s", id))
+	balus.logger.Info("Checking felica", zap.String("id", id))
 
 	url := os.Getenv("LAPUTA_AKATSUKI")
 	if url == "" {

@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 
 	"github.com/k0kubun/pp"
 	"github.com/kelseyhightower/envconfig"
@@ -39,14 +40,38 @@ type Response struct {
 
 func New() *Laputa {
 	l := &Laputa{
-		art:   []byte(LAPUTA),
-		balus: BalusNew(os.Stdout),
+		art: []byte(LAPUTA),
 	}
 
 	err := envconfig.Process("laputa", &l.env)
-	pp.Print(l.env)
 	if err != nil {
 		log.Fatal(err.Error())
+	}
+
+	switch l.env.Mode {
+	case "development":
+		pp.Print(l.env)
+		l.balus = BalusNew(os.Stderr)
+	case "staging":
+		logdir := os.Getenv("LOG_DIR")
+		if logdir == "" {
+			log.Fatal("LOG_DIR env was not set")
+		}
+
+		f, err := os.Create(filepath.Join(logdir, "laputa.log"))
+		if err != nil {
+			log.Fatal(err.Error())
+		}
+		defer f.Close()
+
+		l.balus = BalusNew(f)
+		l.Logger().Info(
+			"Graceful start laputa...",
+			zap.Int("Port", l.env.Port),
+			zap.String("Akatsuki", l.env.Akatsuki),
+		)
+	default:
+		log.Fatal("LAPUTA_MODE env was not set")
 	}
 
 	go func() {
@@ -69,6 +94,7 @@ func main() {
 		laputa.env.Certfile,
 		laputa.env.Keyfile,
 	)
+
 	if err != nil {
 		laputa.Logger().Error(err.Error())
 	}
@@ -83,8 +109,7 @@ func (laputa Laputa) SetMiddleware(e *echo.Echo) {
 }
 
 func (laputa *Laputa) RegisterRoute(e *echo.Echo) {
-	e.GET("/", laputa.HealthCheck)
-	e.GET("/information", laputa.HealthCheck) // fake
+	e.Any("/", laputa.HealthCheck)
 	e.HEAD("/information", laputa.GetInfo)
 	e.POST("/register", laputa.Register)
 }
@@ -110,8 +135,7 @@ func (laputa *Laputa) Register(c echo.Context) error {
 	if subtle.ConstantTimeCompare([]byte(header.Get("X-Device")), []byte(laputa.GetDeviceHash())) != 1 {
 		return c.JSON(http.StatusBadRequest, Response{Status: "Bad request"})
 	}
-	decoder := json.NewDecoder(c.Request().Body)
-	decoder.Decode(laputa)
+	json.NewDecoder(c.Request().Body).Decode(laputa)
 
 	return laputa.Store(c)
 }
