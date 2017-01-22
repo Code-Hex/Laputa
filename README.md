@@ -41,7 +41,7 @@ It is a felica reader that exists in the 1st building of the Faculty of Engineer
               |   ^    |       |   |           |                          |
               |   |    |       |   |           |                 +--------+-------+
 initialize    |   |    |       |   |           |                 |                |
-　　　　  to        |   |    |       |   |           |                 |   nfc reader   |
+    to        |   |    |       |   |           |                 |   nfc reader   |
 authenticate  |   |    |       |   |           |                 |                |
               |   |    |       |   |           | send felica id  +----------------+
               |   |    |       |   |           |
