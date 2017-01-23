@@ -5,6 +5,8 @@ import nfc.clf
 import nfc.ndef
 import binascii
 
+import os
+import os.path
 import sys
 import socket
 import pifacedigitalio
@@ -12,9 +14,17 @@ import threading
 import time
 
 import logging
+import logging.handlers
+
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger('main')
-handler = logging.FileHandler('scan_card.log')
+path =  os.path.join(os.environ['LOG_DIR'], 'scan_card.log')
+handler = logging.handlers.TimedRotatingFileHandler(
+	path,
+	when="D",
+	interval=1,
+	backupCount=5
+)
 handler.setLevel(logging.INFO)
 
 formatter = logging.Formatter('%(levelname)s(%(name)s): %(asctime)s - %(message)s')
