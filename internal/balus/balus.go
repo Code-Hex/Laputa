@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/Code-Hex/Laputa/internal/context"
 	"github.com/kelseyhightower/envconfig"
 	rotatelogs "github.com/lestrrat/go-file-rotatelogs"
 	"github.com/syndtr/goleveldb/leveldb"
@@ -21,15 +22,8 @@ import (
  * here it means to confirm that felica's id is registered.
  */
 
-type Env struct {
-	Floor    string
-	Akatsuki string
-	Certfile string
-	Keyfile  string
-}
-
 type balus struct {
-	env    Env
+	env    context.Env
 	logger zap.Logger
 }
 
@@ -45,7 +39,7 @@ func New(mode string) *balus {
 func (b *balus) setup(mode string) *balus {
 	switch mode {
 	case "develop":
-		b.setlogger(os.Stderr)
+		b.logger = context.Setlogger(os.Stderr)
 	case "staging":
 		logdir := os.Getenv("LOG_DIR")
 		if logdir == "" {
@@ -62,7 +56,7 @@ func (b *balus) setup(mode string) *balus {
 			log.Fatalf("failed to create rotatelogs: %s", err)
 		}
 		defer f.Close()
-		b.setlogger(zap.AddSync(f))
+		b.logger = context.Setlogger(zap.AddSync(f))
 	default:
 		log.Fatal("main.mode was not set")
 	}
@@ -76,14 +70,6 @@ func (b *balus) Run() int {
 		return 1
 	}
 	return 0
-}
-
-func (b *balus) setlogger(Out zap.WriteSyncer) {
-	b.logger = zap.New(
-		zap.NewJSONEncoder(JSTFormatter("time")),
-		zap.AddCaller(), // Add line number option
-		zap.Output(Out),
-	)
 }
 
 // What is your answer...
@@ -144,11 +130,4 @@ func getDeviceSecret() (string, error) {
 	}
 
 	return string(secret), nil
-}
-
-func JSTFormatter(key string) zap.TimeFormatter {
-	return zap.TimeFormatter(func(t time.Time) zap.Field {
-		jst := time.FixedZone("Asia/Tokyo", 9*3600)
-		return zap.String(key, t.In(jst).Format(time.ANSIC))
-	})
 }

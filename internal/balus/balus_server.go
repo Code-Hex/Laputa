@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"io"
 	"net"
-	"os"
-	"syscall"
 
 	"github.com/lestrrat/go-server-starter/listener"
 	"github.com/uber-go/zap"
@@ -74,26 +72,5 @@ func (balus *balus) listenSocket(conn net.Conn) {
 		buf = buf[:nr]
 		balus.logger.Info(fmt.Sprintf("receive: %s", string(buf)))
 		balus.Balus(conn, string(buf))
-	}
-}
-
-func (balus *balus) listenSignal(conn net.Listener, sigchan <-chan os.Signal) {
-	for sig := range sigchan {
-		switch sig {
-		case syscall.SIGHUP:
-			fallthrough
-		case syscall.SIGINT:
-			fallthrough
-		case syscall.SIGQUIT:
-			fallthrough
-		case syscall.SIGABRT:
-			fallthrough
-		case syscall.SIGKILL:
-			fallthrough
-		case syscall.SIGTERM:
-			balus.logger.Info(fmt.Sprintf("Caught signal %s: shutting down.", sig))
-			conn.Close()
-			return
-		}
 	}
 }

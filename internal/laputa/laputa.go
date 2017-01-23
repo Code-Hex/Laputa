@@ -11,6 +11,7 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/Code-Hex/Laputa/internal/context"
 	"github.com/kelseyhightower/envconfig"
 	"github.com/labstack/echo"
 	rotatelogs "github.com/lestrrat/go-file-rotatelogs"
@@ -18,15 +19,8 @@ import (
 	"github.com/uber-go/zap"
 )
 
-type Env struct {
-	Floor    string
-	Akatsuki string
-	Certfile string
-	Keyfile  string
-}
-
 type laputa struct {
-	env    Env
+	env    context.Env
 	art    []byte
 	Echo   *echo.Echo
 	logger zap.Logger
@@ -60,7 +54,7 @@ func (l *laputa) Run() int {
 func (l *laputa) setup(mode string) *laputa {
 	switch mode {
 	case "develop":
-		l.setlogger(os.Stderr)
+		l.logger = context.Setlogger(os.Stderr)
 	case "staging":
 		logdir := os.Getenv("LOG_DIR")
 		if logdir == "" {
@@ -77,7 +71,7 @@ func (l *laputa) setup(mode string) *laputa {
 			log.Fatalf("failed to create rotatelogs: %s", err)
 		}
 		defer f.Close()
-		l.setlogger(zap.AddSync(f))
+		l.logger = context.Setlogger(zap.AddSync(f))
 	default:
 		log.Fatal("main.mode was not set")
 	}
@@ -133,12 +127,4 @@ func (laputa *laputa) Store(c echo.Context) error {
 func (laputa *laputa) GetDeviceHash() string {
 	v := fmt.Sprintf("felica_device_%s", laputa.env.Floor)
 	return fmt.Sprintf("%x", sha256.Sum256([]byte(v)))
-}
-
-func (l *laputa) setlogger(Out zap.WriteSyncer) {
-	l.logger = zap.New(
-		zap.NewJSONEncoder(JSTFormatter("time")),
-		zap.AddCaller(), // Add line number option
-		zap.Output(Out),
-	)
 }
