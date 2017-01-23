@@ -1,2 +1,3 @@
 nfcpy==0.11.1
 pifacedigitalio==3.0.5
+pifacecommon==4.1.2

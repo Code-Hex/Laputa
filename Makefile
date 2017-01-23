@@ -36,7 +36,7 @@ unix-stop:
 	@cat $(unixpid) | xargs kill -TERM
 
 run-staging:
-	@carton exec start_server --port=8080 --pid-file=$(tcppid) -- ./laputa
+	@carton exec start_server --port=443 --pid-file=$(tcppid) -- ./laputa
 	@carton exec start_server --path=$(path) --pid-file=$(unixpid) -- ./balus
 
 restart-staging: tcp-restart unix-restart
