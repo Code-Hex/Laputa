@@ -66,11 +66,11 @@ authenticate  |   |    |       |   |           |                 |              
 There are build modes for development and staging.
 - for develop
     
-      make build-dev
+        make build-dev
 
 - for staging
 
-      make build-staging
+        make build-staging
 
 # Setup
 After `git clone` this project
