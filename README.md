@@ -80,7 +80,7 @@ After `git clone` this project
 # Run
 After setup, you can run
 
-    sudo ./run
+    ./run
 
 # Restart
 You can run without finish after program is modified(Golang projects only).

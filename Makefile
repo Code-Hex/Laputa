@@ -18,7 +18,7 @@ build-staging:
 	@go build -o balus -ldflags='-X main.mode=staging' $(unixserver)
 
 tcp-run:
-	@$(GOPATH)/bin/start_server --port=$(port) --pid-file=$(tcppid) -- ./laputa
+	@carton exec start_server --port=$(port) --pid-file=$(tcppid) -- ./laputa
 
 tcp-restart:
 	@cat $(tcppid) | xargs kilgl -HUP
@@ -27,7 +27,7 @@ tcp-stop:
 	@cat $(tcppid) | xargs kill -TERM
 
 unix-run:
-	@$(GOPATH)/bin/start_server --path=$(path) --pid-file=$(unixpid) -- ./balus
+	@carton exec start_server --path=$(path) --pid-file=$(unixpid) -- ./balus
 
 unix-restart:
 	@cat $(unixpid) | xargs kill -HUP
@@ -36,7 +36,7 @@ unix-stop:
 	@cat $(unixpid) | xargs kill -TERM
 
 run-staging:
-	@$(GOPATH)/bin/start_server --port=443 --pid-file=$(tcppid) -- ./laputa
-	@$(GOPATH)/bin/start_server --path=$(path) --pid-file=$(unixpid) -- ./balus
+	@carton exec start_server --port=8080 --pid-file=$(tcppid) -- ./laputa
+	@carton exec start_server --path=$(path) --pid-file=$(unixpid) -- ./balus
 
 restart-staging: tcp-restart unix-restart
