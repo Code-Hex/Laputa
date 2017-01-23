@@ -1,4 +1,4 @@
-package main
+package laputa
 
 import (
 	"crypto/sha256"

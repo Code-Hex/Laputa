@@ -1,4 +1,4 @@
-package main
+package balus
 
 type LDAP struct {
 	ObjectClass                []string `json:"objectClass"`

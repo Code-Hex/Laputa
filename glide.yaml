@@ -1,11 +1,18 @@
 package: github.com/Code-Hex/Laputa
 import:
-- package: github.com/k0kubun/pp
 - package: github.com/kelseyhightower/envconfig
 - package: github.com/labstack/echo
   subpackages:
   - middleware
+- package: github.com/lestrrat/go-file-rotatelogs
+- package: github.com/lestrrat/go-server-starter
+  subpackages:
+  - listener
 - package: github.com/syndtr/goleveldb
   subpackages:
   - leveldb
 - package: github.com/uber-go/zap
+testImport:
+- package: github.com/stretchr/testify
+  subpackages:
+  - assert

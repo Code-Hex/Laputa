@@ -1,4 +1,4 @@
-package main
+package laputa
 
 import "testing"
 
@@ -27,7 +27,7 @@ const ART = `                      （    ヽ                                   
 `
 
 func TestArt(t *testing.T) {
-	l := &Laputa{art: []byte(LAPUTA)}
+	l := &laputa{art: []byte(LAPUTA)}
 	art, err := l.Art()
 
 	if err != nil || art != ART {
