@@ -1,0 +1,84 @@
+hash: bbb81edef307b2ba7ea3c76b2125026520ccdc34b66f20441c8fbbce7e36b75e
+updated: 2017-01-23T16:22:17.483585633+09:00
+imports:
+- name: github.com/dgrijalva/jwt-go
+  version: a601269ab70c205d26370c16f7c81e9017c14e04
+- name: github.com/golang/snappy
+  version: 7db9049039a047d955fe8c19b83c8ff5abd765c7
+- name: github.com/kelseyhightower/envconfig
+  version: 4069f29f08928c54bcb1fdf632b31b1bb54b4fdb
+- name: github.com/labstack/echo
+  version: 900a46371531e6887214175fcc74aa5bcc32ab91
+  subpackages:
+  - middleware
+- name: github.com/labstack/gommon
+  version: f72d3c883f8ea180da8f085dd320804c41332ad1
+  subpackages:
+  - bytes
+  - color
+  - log
+  - random
+- name: github.com/lestrrat/go-file-rotatelogs
+  version: 505c036604b3326a96097ca91865df30043093a5
+- name: github.com/lestrrat/go-server-starter
+  version: f9cb0b066498d26a90fd918fe265adbb0ea02bcf
+  subpackages:
+  - listener
+- name: github.com/lestrrat/go-strftime
+  version: 04ef93e285313c8978cbc7cad26d2aa7a9927451
+- name: github.com/mattn/go-colorable
+  version: d228849504861217f796da67fae4f6e347643f15
+- name: github.com/mattn/go-isatty
+  version: 30a891c33c7cde7b02a981314b4228ec99380cca
+- name: github.com/pkg/errors
+  version: 248dadf4e9068a0b3e79f02ed0a610d935de5302
+- name: github.com/syndtr/goleveldb
+  version: 23851d93a2292dcc56e71a18ec9e0624d84a0f65
+  subpackages:
+  - leveldb
+  - leveldb/cache
+  - leveldb/comparer
+  - leveldb/errors
+  - leveldb/filter
+  - leveldb/iterator
+  - leveldb/journal
+  - leveldb/memdb
+  - leveldb/opt
+  - leveldb/storage
+  - leveldb/table
+  - leveldb/util
+- name: github.com/uber-go/atomic
+  version: 3b8db5e93c4c02efbc313e17b2e796b0914a01fb
+- name: github.com/uber-go/zap
+  version: a5783ee4b216a927da8f839c45cfbf9d694e1467
+- name: github.com/valyala/bytebufferpool
+  version: e746df99fe4a3986f4d4f79e13c1e0117ce9c2f7
+- name: github.com/valyala/fasttemplate
+  version: d090d65668a286d9a180d43a19dfdc5dcad8fe88
+- name: golang.org/x/crypto
+  version: b8a2a83acfe6e6770b75de42d5ff4c67596675c0
+  subpackages:
+  - acme
+  - acme/autocert
+- name: golang.org/x/net
+  version: f2499483f923065a842d38eb4c7f1927e6fc6e6d
+  subpackages:
+  - context
+  - context/ctxhttp
+- name: golang.org/x/sys
+  version: d75a52659825e75fff6158388dddc6a5b04f9ba5
+  subpackages:
+  - unix
+testImports:
+- name: github.com/davecgh/go-spew
+  version: 04cdfd42973bb9c8589fd6a731800cf222fde1a9
+  subpackages:
+  - spew
+- name: github.com/pmezard/go-difflib
+  version: d8ed2627bdf02c080bf22230dbb337003b7aba2d
+  subpackages:
+  - difflib
+- name: github.com/stretchr/testify
+  version: 2402e8e7a02fc811447d11f881aa9746cdc57983
+  subpackages:
+  - assert
