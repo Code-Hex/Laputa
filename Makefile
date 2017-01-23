@@ -2,26 +2,8 @@ tcpserver = ./cmd/laputa/main.go
 unixserver = ./cmd/balus/main.go
 tcppid = $(PWD)/$(tcpserver).pid
 unixpid = $(PWD)/$(unixserver).pid
-port = 8080
 path = /tmp/laputa.sock
-
-tcp-run:
-	@$(GOPATH)/bin/start_server --port=$(port) --pid-file=$(tcppid) -- ./laputa
-
-tcp-restart:
-	@cat $(tcppid) | xargs kill -HUP
-
-tcp-stop:
-	@cat $(tcppid) | xargs kill -TERM
-
-unix-run:
-	@$(GOPATH)/bin/start_server --path=$(path) --pid-file=$(unixpid) -- ./balus
-
-unix-restart:
-	@cat $(unixpid) | xargs kill -HUP
-
-unix-stop:
-	@cat $(unixpid) | xargs kill -TERM
+port = 8080
 
 build-dev:
 	@echo building laputa
@@ -35,3 +17,26 @@ build-staging:
 	@echo building balus
 	@go build -o balus -ldflags='-X main.mode=staging' $(unixserver)
 
+tcp-run:
+	@$(GOPATH)/bin/start_server --port=$(port) --pid-file=$(tcppid) -- ./laputa
+
+tcp-restart:
+	@cat $(tcppid) | xargs kilgl -HUP
+
+tcp-stop:
+	@cat $(tcppid) | xargs kill -TERM
+
+unix-run:
+	@$(GOPATH)/bin/start_server --path=$(path) --pid-file=$(unixpid) -- ./balus
+
+unix-restart:
+	@cat $(unixpid) | xargs kill -HUP
+
+unix-stop:
+	@cat $(unixpid) | xargs kill -TERM
+
+run-staging:
+	@$(GOPATH)/bin/start_server --port=443 --pid-file=$(tcppid) -- ./laputa
+	@$(GOPATH)/bin/start_server --path=$(path) --pid-file=$(unixpid) -- ./balus
+
+restart-staging: tcp-restart unix-restart

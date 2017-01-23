@@ -62,6 +62,16 @@ authenticate  |   |    |       |   |           |                 |              
                           +-------------+
 ```
 
+# Build
+There are build modes for development and staging.
+- for develop
+    
+      make build-dev
+
+- for staging
+
+      make build-staging
+
 # Setup
 After `git clone` this project
 
@@ -72,6 +82,11 @@ After setup, you can run
 
     sudo ./run
 
+# Restart
+You can run without finish after program is modified(Golang projects only).
+
+    make restart-staging
+
 # Configuration
 Please open `run` with your favorite editor.  
 By editing the env function, you can change the behavior at program execution.  
@@ -80,6 +95,4 @@ Environment variable
 - `LAPUTA_CERTFILE` Specify the file path of the certificate
 - `LAPUTA_KEYFILE` Specify the file path of the key
 - `LAPUTA_AKATSUKI` Specify the URL of the api for authentication
-- `LAPUTA_MODE` Running mode `development` or `staging`
 - `LAPUTA_FLOOR` Floor code for registration
-- `LAPUTA_PORT` Port number. Specify as much as possible to `443`

@@ -21,8 +21,7 @@ env(
     LM_COLOR        => 1
 );
 
-service('Castle in the sky', 'make tcp-run');
-service('Balus!!', 'make unix-run');
+service('Castle in the sky', 'make run-staging');
 service('Levistone', './levistone/levistone.py');
 
 run;
