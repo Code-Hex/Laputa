@@ -4,38 +4,35 @@
   remote_user: pi
   hosts: 10.0.4.108
 
+  environment:
+      PATH: /home/pi/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games:/usr/local/go/bin:/usr/local/go/bin:/home/pi/go/bin:/usr/local/go/bin:/home/pi/.plenv/bin:/home/pi/.plenv/shims
+      GOPATH: /home/pi/go
+
   tasks: 
-  - name: git clone plenv
+  - name: git clone plenv & perl-build
     git: 
       repo: '{{ item.repo }}'
       dest: '{{ item.dest }}'
     with_items:
       - repo: https://github.com/tokuhirom/plenv.git
         dest: /home/pi/.plenv
+      - repo: https://github.com/tokuhirom/Perl-Build.git
+        dest: /home/pi/.plenv/plugins/perl-build/
 
   - name: config .bash_profile
-    sudo: yes
-    copy: src=/Users/e145735/ansible/bash_profile.txt dest=/home/pi/.bash_profile
+    copy: src=./.bash_profile dest=/home/pi/.bash_profile
 
   - name: exec Shell
     shell:
         exec $SHELL -l
 
-  - name: git clone perl-build
-    git:
-      repo: '{{ item.repo }}'
-      dest: '{{ item.dest }}'
-    with_items:
-      - repo: https://github.com/tokuhirom/Perl-Build.git
-        dest: /home/pi/.plenv/plugins/perl-build/
-
   - name: install perl
     shell: |
-      /home/pi/.plenv/bin/plenv install 5.24.0 
-      /home/pi/.plenv/bin/plenv rehash
+      plenv install 5.24.0 
+      plenv rehash
 
   - name: install Carton
     shell: 
-        /home/pi/.plenv/bin/plenv install-cpanm
+        plenv install-cpanm
     shell:
-        /home/pi/.plenv/shims/cpanm Carton
+        cpanm Carton

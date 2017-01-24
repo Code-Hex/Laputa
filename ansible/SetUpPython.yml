@@ -4,10 +4,15 @@
   remote_user: pi
   hosts: 10.0.4.108
 
+  environment:
+      PATH: /home/pi/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games:/usr/local/go/bin:/usr/local/go/bin:/home/pi/go/bin:/usr/local/go/bin:/home/pi/.pyenv/bin/
+      GOPATH: /home/pi/go
+
+
   tasks:
-  - name: Copy bash_profile
+  - name: Copy .bash_profile
     copy:
-        src=/Users/e145735/ansible/bash_profile.txt dest=/home/pi/.bash_profile
+        src=./.bash_profile dest=/home/pi/.bash_profile
 
   - name: git clone pyenv
     git:
@@ -16,10 +21,10 @@
 
   - name: install python 2.7.13
     shell:
-         /home/pi/.pyenv/bin/pyenv install 2.7.13
+         pyenv install 2.7.13
 
   - name: pyenv version change 2.7.13
     shell:
-         /home/pi/.pyenv/bin/pyenv global 2.7.13
+         pyenv global 2.7.13
           
 
