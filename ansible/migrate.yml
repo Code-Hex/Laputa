@@ -1,0 +1,46 @@
+---
+- name: Provision instances
+  become: no
+  remote_user: pi
+  hosts: 10.0.4.108
+
+  environment:
+    PATH: /home/pi/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games:/usr/local/go/bin:/usr/local/go/bin:/home/pi/go/bin:/usr/local/go/bin
+    GOPATH: /home/pi/go
+  
+
+  tasks: 
+  - name: Get Laputa Project
+    shell:
+        go get github.com/Code-Hex/Laputa
+    ignore_errors: True
+
+  - name:  PIP install
+    shell: /home/pi/.pyenv/shims/pip install -r requirements.txt
+    args:
+        chdir: /home/pi/go/src/github.com/Code-Hex/Laputa/
+
+  - name: Carton install
+    shell: /home/pi/.plenv/shims/carton install
+    args:
+        chdir: /home/pi/go/src/github.com/Code-Hex/Laputa/
+
+  - name: Build
+    shell: glide up 
+    args:
+        chdir: /home/pi/go/src/github.com/Code-Hex/Laputa/
+
+  - name: Make Build
+    shell: make build-staging
+    args:
+        chdir: /home/pi/go/src/github.com/Code-Hex/Laputa/
+
+  - name: Start
+    shell: /home/pi/.plenv/shims/carton exec ./run
+    args:
+        chdir: /home/pi/go/src/github.com/Code-Hex/Laputa/
+
+
+
+
+

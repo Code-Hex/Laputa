@@ -1,0 +1,29 @@
+---
+- name: Provision instances
+  become: yes
+  remote_user: pi
+  hosts:  10.0.4.108
+
+  tasks: 
+  - name: Get go source file 
+    shell: wget https://storage.googleapis.com/golang/go1.7.4.linux-armv6l.tar.gz
+    args:
+        creates: go1.7.4.linux-armv6l.tar.gz
+  
+  - name: Install go
+    shell: tar -C /usr/local -xzf go1.7.4.linux-armv6l.tar.gz
+
+  - name: Install glide
+    shell: |
+        wget https://github.com/Masterminds/glide/releases/download/v0.12.3/glide-v0.12.3-linux-armv7.tar.gz
+        tar -xzf glide-v0.12.3-linux-armv7.tar.gz
+    args:
+        creates: linux-armv7.tar.gz
+
+  - name: mv 
+    sudo: yes
+    shell:
+        mv ./linux-armv7/glide /usr/bin
+    args:
+        creates: linux-armv7
+

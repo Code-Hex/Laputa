@@ -1,0 +1,41 @@
+---
+- name: Provision instances
+  become: no
+  remote_user: pi
+  hosts: 10.0.4.108
+
+  tasks: 
+  - name: git clone plenv
+    git: 
+      repo: '{{ item.repo }}'
+      dest: '{{ item.dest }}'
+    with_items:
+      - repo: https://github.com/tokuhirom/plenv.git
+        dest: /home/pi/.plenv
+
+  - name: config .bash_profile
+    sudo: yes
+    copy: src=/Users/e145735/ansible/bash_profile.txt dest=/home/pi/.bash_profile
+
+  - name: exec Shell
+    shell:
+        exec $SHELL -l
+
+  - name: git clone perl-build
+    git:
+      repo: '{{ item.repo }}'
+      dest: '{{ item.dest }}'
+    with_items:
+      - repo: https://github.com/tokuhirom/Perl-Build.git
+        dest: /home/pi/.plenv/plugins/perl-build/
+
+  - name: install perl
+    shell: |
+      /home/pi/.plenv/bin/plenv install 5.24.0 
+      /home/pi/.plenv/bin/plenv rehash
+
+  - name: install Carton
+    shell: 
+        /home/pi/.plenv/bin/plenv install-cpanm
+    shell:
+        /home/pi/.plenv/shims/cpanm Carton
