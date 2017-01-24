@@ -1,15 +1,15 @@
 ---
-- name: Provision instances
+- name: setup go
   become: no
   remote_user: pi
   hosts:  10.0.4.108
 
   environment:
-    PATH: /home/pi/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games:/usr/local/go/bin:/usr/local/go/bin:/home/pi/go/bin:/usr/local/go/bin
+    PATH: /home/pi/:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/go/bin
     GOPATH: /home/pi/go
 
   tasks: 
-  - name: Get go source file 
+  - name: get go source file 
     vars:
       goversion: 1.7.4
       goarch: armv6l
@@ -19,11 +19,11 @@
       dest: /home/pi/go{{ goversion }}.linux-{{ goarch }}.tar.gz
       checksum: sha256:{{ gosha256 }}
   
-  - name: Install go
+  - name: install go
     sudo: yes
     shell: tar -C /usr/local -xzf go1.7.4.linux-armv6l.tar.gz
 
-  - name: Get glide
+  - name: get glide
     vars:
       glideversion: v0.12.3
       glidearch: armv7
@@ -33,13 +33,13 @@
       dest: /home/pi/linux-{{ glidearch }}.tar.gz
       checksum: sha256:{{ glidesha256 }}
 
-  - name: Install glide
+  - name: install glide
     shell:
         tar -xzf glide-v0.12.3-linux-armv7.tar.gz
     args:
         creates: linux-armv7.tar.gz
 
-  - name: Move gilde  
+  - name: move gilde  
     shell:
         mv ./linux-armv7/glide /usr/local/go/bin
     args:

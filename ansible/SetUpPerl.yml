@@ -1,11 +1,11 @@
 ---
-- name: Provision instances
+- name: setup perl
   become: no
   remote_user: pi
   hosts: 10.0.4.108
 
   environment:
-      PATH: /home/pi/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games:/usr/local/go/bin:/usr/local/go/bin:/home/pi/go/bin:/usr/local/go/bin:/home/pi/.plenv/bin:/home/pi/.plenv/shims
+      PATH: /home/pi/:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/go/bin:/home/pi/.plenv/bin:/home/pi/.plenv/shims
       GOPATH: /home/pi/go
 
   tasks: 
@@ -22,7 +22,7 @@
   - name: config .bash_profile
     copy: src=./.bash_profile dest=/home/pi/.bash_profile
 
-  - name: exec Shell
+  - name: exec shell
     shell:
         exec $SHELL -l
 
@@ -31,7 +31,7 @@
       plenv install 5.24.0 
       plenv rehash
 
-  - name: install Carton
+  - name: install carton
     shell: 
         plenv install-cpanm
     shell:

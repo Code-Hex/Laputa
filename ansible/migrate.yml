@@ -1,46 +1,30 @@
 ---
-- name: Provision instances
+- name: project migration
   become: no
   remote_user: pi
   hosts: 10.0.4.108
 
   environment:
-    PATH: /home/pi/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games:/usr/local/go/bin:/usr/local/go/bin:/home/pi/go/bin:/usr/local/go/bin:/home/pi/.pyenv/shims:/home/pi/.plenv/shims
+      PATH: /home/pi:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/go/bin:/home/pi/.pyenv/shims:/home/pi/.plenv/shims
     GOPATH: /home/pi/go
   
 
   tasks: 
-  - name: Get Laputa Project
+  - name: get laputa project
     shell:
         go get github.com/Code-Hex/Laputa
     ignore_errors: True
 
-  - name:  PIP install
-    shell: pip install -r requirements.txt
+  - name: modules install 
+    shell: "{{ item.cmd }}"
     args:
         chdir: /home/pi/go/src/github.com/Code-Hex/Laputa/
+    with_items:
+        - cmd: pip install -r requirements.txt
+        - cmd: carton install
+        - cmd: glide up
 
-  - name: Carton install
-    shell: carton install
-    args:
-        chdir: /home/pi/go/src/github.com/Code-Hex/Laputa/
-
-  - name: Build
-    shell: glide up 
-    args:
-        chdir: /home/pi/go/src/github.com/Code-Hex/Laputa/
-
-  - name: Make Build
+  - name: make build
     shell: make build-staging
     args:
         chdir: /home/pi/go/src/github.com/Code-Hex/Laputa/
-
-  - name: Start
-    shell: carton exec ./run
-    args:
-        chdir: /home/pi/go/src/github.com/Code-Hex/Laputa/
-
-
-
-
-

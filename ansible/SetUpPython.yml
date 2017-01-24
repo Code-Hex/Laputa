@@ -1,16 +1,14 @@
 ---
-- name: Provision instances
+- name: setup python
   become: no
   remote_user: pi
   hosts: 10.0.4.108
 
   environment:
-      PATH: /home/pi/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games:/usr/local/go/bin:/usr/local/go/bin:/home/pi/go/bin:/usr/local/go/bin:/home/pi/.pyenv/bin/
-      GOPATH: /home/pi/go
-
+    PATH: /home/pi/:/usr/sbin:/usr/bin:/sbin:/bin:/home/pi/.pyenv/bin/
 
   tasks:
-  - name: Copy .bash_profile
+  - name: copy .bash_profile
     copy:
         src=./.bash_profile dest=/home/pi/.bash_profile
 
