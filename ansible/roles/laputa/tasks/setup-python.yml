@@ -1,0 +1,12 @@
+---
+- name: git clone pyenv
+  git:
+    repo: https://github.com/yyuu/pyenv.git
+    dest: /home/pi/.pyenv
+
+- name: install python 2.7.13
+  shell: pyenv install 2.7.13
+  ignore_errors: True
+
+- name: pyenv version change 2.7.13
+  shell: pyenv global 2.7.13

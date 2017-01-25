@@ -1,0 +1,37 @@
+---
+# Include variables and define needed variables.
+- name: Include OS-specific variables.
+  include_vars: "{{ ansible_os_family }}.yml"
+
+#  Setup/install tasks.
+- include: "setup-{{ ansible_os_family }}.yml"
+  static: no
+
+- name: config .bash_profile
+  copy: src=.bash_profile dest=/home/pi/.bash_profile
+
+- include: "setup-{{ item.lang }}.yml"
+  with_items:
+    - lang: go
+    - lang: perl
+    - lang: python
+
+- name: get laputa project
+  shell:
+      go get github.com/Code-Hex/Laputa
+  ignore_errors: True
+
+- pip:
+    requirements: "{{ laputa }}/requirements.txt"
+
+- name: modules install 
+  shell: |
+      carton install
+      glide up
+  args:
+    chdir: /home/pi/go/src/github.com/Code-Hex/Laputa/
+
+- name: make build
+  shell: make build-staging
+  args:
+    chdir: /home/pi/go/src/github.com/Code-Hex/Laputa/

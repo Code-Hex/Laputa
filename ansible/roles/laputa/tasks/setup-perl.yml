@@ -1,0 +1,22 @@
+---
+- name: git clone plenv & perl-build
+  git: 
+    repo: '{{ item.repo }}'
+    dest: '{{ item.dest }}'
+  with_items:
+    - repo: https://github.com/tokuhirom/plenv.git
+      dest: /home/pi/.plenv
+    - repo: https://github.com/tokuhirom/Perl-Build.git
+      dest: /home/pi/.plenv/plugins/perl-build/
+
+- name: exec shell
+  shell: exec $SHELL -l
+
+- name: install perl
+  shell: |
+    plenv install 5.24.0 
+    plenv rehash
+    plenv install-cpanm
+
+- name: install carton
+  shell: cpanm Carton
