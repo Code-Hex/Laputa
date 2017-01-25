@@ -3,28 +3,9 @@
   become: no
   remote_user: pi
   hosts: 10.0.4.108
-
+  roles:
+    - laputa
   environment:
-      PATH: /home/pi:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/go/bin:/home/pi/.pyenv/shims:/home/pi/.plenv/shims
+    PATH: /usr/sbin:/usr/bin:/sbin:/bin:/usr/local/go/bin:/home/pi/.pyenv/bin:/home/pi/.pyenv/shims:/home/pi/.plenv/bin:/home/pi/.plenv/shims
     GOPATH: /home/pi/go
-  
 
-  tasks: 
-  - name: get laputa project
-    shell:
-        go get github.com/Code-Hex/Laputa
-    ignore_errors: True
-
-  - name: modules install 
-    shell: "{{ item.cmd }}"
-    args:
-        chdir: /home/pi/go/src/github.com/Code-Hex/Laputa/
-    with_items:
-        - cmd: pip install -r requirements.txt
-        - cmd: carton install
-        - cmd: glide up
-
-  - name: make build
-    shell: make build-staging
-    args:
-        chdir: /home/pi/go/src/github.com/Code-Hex/Laputa/
