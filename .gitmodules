@@ -1,3 +1,3 @@
-[submodule "docker"]
-    path = docker/pi
-    url = https://github.com/Code-Hex/docker-rpi-raspbian.git
+[submodule "docker/pi"]
+	path = docker/pi
+	url = https://github.com/Code-Hex/docker-rpi-raspbian.git
