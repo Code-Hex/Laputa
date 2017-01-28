@@ -11,10 +11,15 @@ RUN useradd pi \
     && addgroup pi sudo \
     && true
 
+RUN chsh -s /bin/bash pi
 RUN echo 'pi:raspberry' | chpasswd
 RUN mkdir -p /home/pi/.ssh && chmod go-rwx /home/pi/.ssh
+
+# FileCopy(local to container image)
 COPY ./authorized_keys /home/pi/.ssh/authorized_keys
-RUN chmod go-rw /home/pi/.ssh/authorized_keys && chown -R pi:pi /home/pi/.ssh
+COPY ./bashrc /home/pi/.bashrc
+
+RUN chmod go-rw /home/pi/.ssh/authorized_keys && chown -R pi:pi /home/pi
 
 # Enable passwordless sudo for users under the "sudo" group
 RUN sed -i.bkp -e \
