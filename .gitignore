@@ -5,3 +5,4 @@ log
 *balus
 vendor
 local
+docker/authorized_keys
