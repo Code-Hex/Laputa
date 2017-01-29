@@ -1,7 +1,9 @@
 FROM raspbian
 MAINTAINER Code-Hex <x00.x7f@gmail.com>
 
-RUN apt-get update && apt-get install -y sudo
+RUN apt-get update && apt-get install -y apt-utils sudo && apt-get -y dist-upgrade
+RUN apt-get install -y python python-pip python3 python3-dev python3-pip
+
 RUN mkdir /var/run/sshd
 
 RUN useradd pi \
