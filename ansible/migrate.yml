@@ -2,7 +2,7 @@
 - name: project migration
   become: no
   remote_user: pi
-  hosts: 10.0.4.108
+  hosts: 10.0.2.44
   roles:
     - laputa
   environment:

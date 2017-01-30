@@ -1,2 +1,16 @@
 ---
 user: pi
+
+__apt_install_packages:
+  - git
+  - openssl
+  - build-essential 
+  - libssl-dev 
+  - zlib1g-dev 
+  - libbz2-dev 
+  - libreadline-dev 
+  - libsqlite3-dev  
+  - llvm 
+  - libncurses5-dev 
+  - libncursesw5-dev 
+  - xz-utils

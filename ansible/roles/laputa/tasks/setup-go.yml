@@ -1,7 +1,7 @@
 ---
 - name: mkdir go directory
   file: 
-    path: /home/pi/go 
+    path: "{{ gopath }}" 
     state: directory 
     owner: "{{ user }}" 
     group: "{{ user }}" 
@@ -24,19 +24,20 @@
 - name: get glide
   vars:
     glideversion: v0.12.3
-    glidearch: armv7
-    glidesha256: cce4242c11d084f99087caaa0a42c8476a81db0cbcc83932f5821e1f29b7edb2
+    glidearch: armv6
+    glidesha256: f462a5b8357f49897348a9e7281113a8a94b50bf027e38e8ec30a9073a6dc352
   get_url: 
     url: https://github.com/Masterminds/glide/releases/download/v0.12.3/glide-{{ glideversion }}-linux-{{ glidearch }}.tar.gz 
     dest: /home/pi/linux-{{ glidearch }}.tar.gz
     checksum: sha256:{{ glidesha256 }}
 
 - name: install glide
-  shell: tar -xzf glide-v0.12.3-linux-armv7.tar.gz
+  shell: tar -xzf linux-armv6.tar.gz
   args:
-    creates: linux-armv7.tar.gz
+    creates: linux-armv6
 
 - name: move gilde  
-  shell: mv ./linux-armv7/glide /usr/local/go/bin
+  sudo: yes
+  shell: mv "{{ home }}/linux-armv6/glide /usr/local/go/bin/"
   args:
-    creates: linux-armv7
+    creates: linux-armv6
