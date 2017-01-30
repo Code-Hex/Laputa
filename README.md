@@ -73,13 +73,14 @@ There are build modes for development and staging.
         make build-staging
 
 # Setup
-After `git clone` this project
+## Ansible
+    ansible-playbook mi
+After invoke ansible for this project
 
     ./migrate
 
 # Run
 After setup, you can run
-
     carton exec ./run
 
 # Restart
