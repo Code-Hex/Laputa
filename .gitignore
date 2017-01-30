@@ -4,4 +4,7 @@ log
 *balus
 vendor
 local
+.DS_Store
 *swp
+ansible/glide-v0.12.3-linux-armv6.tar.gz
+ansible/*.retry
