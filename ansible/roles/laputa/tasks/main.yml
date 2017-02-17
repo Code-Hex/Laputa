@@ -14,21 +14,6 @@
 - name: config .bash_profile
   copy: src=.bash_profile dest=/home/pi/.bash_profile
 
-- iptables_raw: 
-    name=allow_tcp_443
-    rules='-A INPUT -i lo -j ACCEPT
-           -A INPUT -d 127.0.0.0/8 -j REJECT
-           -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
-           -A OUTPUT -j ACCEPT
-           -A INPUT -p tcp --dport 80 -j ACCEPT
-           -A INPUT -p tcp --dport 443 -j ACCEPT
-           -A INPUT -p tcp -m state --state NEW --dport 22 -j ACCEPT
-           -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
-           -A INPUT -j DROP
-           -A FORWARD -j DROP'
-  become: yes
-    
-
 - include: "setup-{{ item.lang }}.yml"
   with_items:
     - lang: go
