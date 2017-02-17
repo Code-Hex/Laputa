@@ -74,13 +74,14 @@ There are build modes for development and staging.
 
 # Setup
 ## Ansible
-    ansible-playbook mi
-After invoke ansible for this project
 
-    ./migrate
+Run below script after setting SSH-KEY.
+
+    ansible-playbook ./ansible/migrate.yml --praivate-key=SSH-KEY
 
 # Run
 After setup, you can run
+
     carton exec ./run
 
 # Restart
