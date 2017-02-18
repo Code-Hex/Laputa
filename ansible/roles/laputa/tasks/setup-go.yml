@@ -1,0 +1,43 @@
+---
+- name: mkdir go directory
+  file: 
+    path: "{{ gopath }}" 
+    state: directory 
+    owner: "{{ user }}" 
+    group: "{{ user }}" 
+    mode: 0755
+
+- name: get go source file 
+  vars:
+    goversion: 1.7.4
+    goarch: armv6l
+    gosha256: 075c5f4446234e26c1380003ff2b050f0c7e63591410bab65355a945601bf245
+  get_url: 
+    url: https://storage.googleapis.com/golang/go{{ goversion }}.linux-{{ goarch }}.tar.gz 
+    dest: /home/pi/go{{ goversion }}.linux-{{ goarch }}.tar.gz
+    checksum: sha256:{{ gosha256 }}
+ 
+- name: install go
+  sudo: yes
+  shell: tar -C /usr/local -xzf go1.7.4.linux-armv6l.tar.gz
+
+- name: get glide
+  vars:
+    glideversion: v0.12.3
+    glidearch: armv6
+    glidesha256: f462a5b8357f49897348a9e7281113a8a94b50bf027e38e8ec30a9073a6dc352
+  get_url: 
+    url: https://github.com/Masterminds/glide/releases/download/v0.12.3/glide-{{ glideversion }}-linux-{{ glidearch }}.tar.gz 
+    dest: /home/pi/linux-{{ glidearch }}.tar.gz
+    checksum: sha256:{{ glidesha256 }}
+
+- name: install glide
+  shell: tar -xzf linux-armv6.tar.gz
+  args:
+    creates: linux-armv6
+
+- name: move gilde  
+  sudo: yes
+  shell: mv "{{ home }}/linux-armv6/glide /usr/local/go/bin/"
+  args:
+    creates: linux-armv6

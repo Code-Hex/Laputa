@@ -1,0 +1,32 @@
+---
+- name: check installed plenv 
+  shell: which plenv
+  register: result
+  ignore_errors: yes
+
+- name: git clone plenv & perl-build
+  git: 
+    repo: '{{ item.repo }}'
+    dest: '{{ item.dest }}'
+  with_items:
+    - repo: https://github.com/tokuhirom/plenv.git
+      dest: /home/pi/.plenv
+    - repo: https://github.com/tokuhirom/Perl-Build.git
+      dest: /home/pi/.plenv/plugins/perl-build/
+  when: result.rc != 0
+
+- name: exec shell
+  shell: exec $SHELL -l
+  when: result.rc != 0
+
+- name: install perl
+  shell: |
+    plenv install 5.24.0 
+    plenv rehash
+    plenv global 5.24.0
+    plenv install-cpanm
+  when: result.rc != 0
+
+- name: install carton
+  shell: cpanm Carton
+  when: result.rc != 0

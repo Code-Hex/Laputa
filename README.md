@@ -73,9 +73,11 @@ There are build modes for development and staging.
         make build-staging
 
 # Setup
-After `git clone` this project
+## Ansible
 
-    ./migrate
+Run below script after setting SSH-KEY.
+
+    ansible-playbook ./ansible/migrate.yml --praivate-key=SSH-KEY
 
 # Run
 After setup, you can run

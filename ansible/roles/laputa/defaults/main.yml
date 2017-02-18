@@ -1,0 +1,10 @@
+---
+home: /home/pi
+sbin: /usr/sbin:/sbin
+bin: /usr/bin:/bin
+gobin: /usr/local/go/bin
+gopath: /home/pi/go
+plenvpath: /home/pi/.plenv/bin:/home/pi/.plenv/shims 
+pyenvpath: /home/pi/.pyenv/bin:/home/pi/.pyenv/shims
+
+laputa: "{{ gopath }}/src/github.com/Code-Hex/Laputa"
