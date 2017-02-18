@@ -62,7 +62,11 @@ func (laputa *laputa) RunServer() error {
 		s.TLSConfig.NextProtos = append(s.TLSConfig.NextProtos, "h2")
 	}
 
-	go serve(s, l)
+	go func() {
+		if err := serve(s, l); err != nil {
+			laputa.logger.Error("serve error", zap.String("reason", err.Error()))
+		}
+	}()
 
 	// Graceful shutdown (signal by TERM).
 	termCh := make(chan os.Signal, 1)
