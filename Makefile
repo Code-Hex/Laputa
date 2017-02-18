@@ -2,7 +2,7 @@ tcpserver = ./cmd/laputa/main.go
 unixserver = ./cmd/balus/main.go
 tcppid = $(PWD)/laputa.pid
 unixpid = $(PWD)/balus.pid
-path = /tmp/laputa.sock
+path = ./balus.sock
 port = 8080
 
 build-dev:
