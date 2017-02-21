@@ -151,7 +151,7 @@ class Reader:
 
 
 if __name__ == '__main__':
-	reader = Reader('/tmp/laputa.sock')
+	reader = Reader("../laputa.sock")
 	reader.socket_connect()
 	
 	while reader.run():
