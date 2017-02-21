@@ -15,14 +15,10 @@ func TestNew(t *testing.T) {
 	envs := []context.Env{
 		{
 			Floor:    "F321",
-			Certfile: "/hello/cert",
-			Keyfile:  "/test/key",
 			Akatsuki: "localhost:8080",
 		},
 		{
 			Floor:    "F322",
-			Certfile: "cert",
-			Keyfile:  "key",
 			Akatsuki: "localhost",
 		},
 	}
@@ -44,8 +40,6 @@ func TestNew(t *testing.T) {
 	for _, d := range data {
 		for _, env := range d.Envs {
 			os.Setenv("LAPUTA_FLOOR", env.Floor)
-			os.Setenv("LAPUTA_CERTFILE", env.Certfile)
-			os.Setenv("LAPUTA_KEYFILE", env.Keyfile)
 			os.Setenv("LAPUTA_AKATSUKI", env.Akatsuki)
 			os.Setenv("LOG_DIR", "_testdata")
 

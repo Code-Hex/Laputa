@@ -9,8 +9,6 @@ import (
 type Env struct {
 	Floor    string
 	Akatsuki string
-	Certfile string
-	Keyfile  string
 }
 
 func JSTFormatter(key string) zap.TimeFormatter {
