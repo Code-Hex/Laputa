@@ -2,8 +2,6 @@ package laputa
 
 import (
 	"context"
-	"crypto/tls"
-	"errors"
 	"net"
 	"net/http"
 	"os"
@@ -16,10 +14,6 @@ import (
 )
 
 func (laputa *laputa) RunServer() error {
-	if laputa.hasNotSecurityFiles() {
-		return errors.New("invalid tls configuration")
-	}
-
 	var l net.Listener
 
 	port := os.Getenv("SERVER_STARTER_PORT")
@@ -49,18 +43,7 @@ func (laputa *laputa) RunServer() error {
 		zap.String("Akatsuki", laputa.env.Akatsuki),
 	)
 
-	s := laputa.Echo.TLSServer
-	s.TLSConfig = new(tls.Config)
-	s.TLSConfig.Certificates = make([]tls.Certificate, 1)
-
-	var err error
-	s.TLSConfig.Certificates[0], err = tls.LoadX509KeyPair(laputa.pairKeyFiles())
-	if err != nil {
-		return err
-	}
-	if !laputa.Echo.DisableHTTP2 {
-		s.TLSConfig.NextProtos = append(s.TLSConfig.NextProtos, "h2")
-	}
+	s := laputa.Echo.Server
 
 	go func() {
 		if err := serve(s, l); err != nil {
@@ -93,12 +76,4 @@ func serve(server *http.Server, l net.Listener) error {
 
 func shutdown(ctx context.Context, server *http.Server) error {
 	return server.Shutdown(ctx)
-}
-
-func (l *laputa) hasNotSecurityFiles() bool {
-	return l.env.Certfile == "" || l.env.Keyfile == ""
-}
-
-func (l *laputa) pairKeyFiles() (string, string) {
-	return l.env.Certfile, l.env.Keyfile
 }
